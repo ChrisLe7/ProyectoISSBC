@@ -60,34 +60,47 @@ class ClasificacionDlg(QMainWindow):
         self.buttonsLayout.addWidget(self.diagnosticaButton)
         self.buttonsLayout.addStretch()
         
-        grid = QGridLayout()
-        grid.setSpacing(5)
+        layoutObservables = QHBoxLayout()
+        layoutObservables.addWidget(labelFallosA)
+        layoutObservables.addWidget(self.tablaObservables)
         
-        grid.addWidget(labelFallosA, 0, 4)
-        grid.addWidget(labelFallosB, 0, 5)
-        grid.addWidget(self.tablaObservables, 2, 2, 1, 8)
+        layoutHipotesis = QHBoxLayout()
+        layoutHipotesis.addWidget(labelHipotesisL)
+        layoutHipotesis.addWidget(self.listWidgetHipotesis)
         
-        grid.addWidget(labelHipotesisL, 0, 10)
-        grid.addWidget(labelHipotesisR, 0, 11)
-        grid.addWidget(self.listWidgetHipotesis, 2, 10,1,3)
+        layoutDiagnosticos = QHBoxLayout()
+        layoutDiagnosticos.addWidget(labelDiagnosticoL)
+        layoutDiagnosticos.addWidget(self.listWidgetDiagnosticos)
+ 
+        layoutExplicacion = QHBoxLayout()
+        layoutExplicacion.addWidget(labelExplicacionL)
+        layoutExplicacion.addWidget(self.PlainTextEditExplicacion)       
+ 
+        layoutSeccionInferior = QGridLayout() 
+        layoutSeccionInferior.addLayout(layoutDiagnosticos,0,0)
         
-        grid.addWidget(labelDiagnosticoL, 4, 0)
-        grid.addWidget(labelDiagnosticoR, 4, 1)
-        grid.addWidget(self.listWidgetDiagnosticos, 5, 0,1,2)
-        grid.addWidget(labelExplicacionL, 4, 2)
-        grid.addWidget(labelExplicacionR, 4, 3)
-        grid.addWidget(self.PlainTextEditExplicacion, 5, 2,1,11)
+        layoutSeccionInferior.addLayout(layoutExplicacion,0,1)
+        layoutSeccionInferior.setColumnStretch(0, 1)
+        layoutSeccionInferior.setColumnStretch(1, 2)
         
+        layoutSeccionSuperior = QGridLayout() 
+        layoutSeccionSuperior.addLayout(layoutObservables,0,0)
+        
+        layoutSeccionSuperior.addLayout(layoutHipotesis,0,1)
+        layoutSeccionSuperior.setColumnStretch(0, 1)
+        layoutSeccionSuperior.setColumnStretch(1, 2)
+ 
         #Diseño principal
         mainLayout = QVBoxLayout() #Se crea el diseño principal en forma vertical
-        mainLayout.addLayout(grid) #Le añadimos la rejilla de los controles
+        mainLayout.addLayout(layoutSeccionSuperior) 
+        mainLayout.addLayout(layoutSeccionInferior) 
         mainLayout.addLayout(self.buttonsLayout) #Añadimos la disposicion de controles horizontal
         self.setLayout(mainLayout) #Asignar a la ventana la distribucion de los controles
         
     
         
-        self.setWindowTitle('Aplicación para el Diagnostico - Ángel Fuentes y Christian Luna')
-        self.resize(400, 400)
+        self.setWindowTitle(u'Aplicación para el Diagnostico - Ángel Fuentes y Christian Luna')
+        self.setGeometry(300, 300, 750, 650)
         self.show()
 
 
