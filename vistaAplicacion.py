@@ -9,7 +9,8 @@ import sys
 from os import listdir
 from importlib import import_module
 from bcGenerica import Observable
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidget, QLabel, QListWidget, QPushButton, QPlainTextEdit, QHBoxLayout, QVBoxLayout, QGridLayout
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QTableWidget, QLabel, QListWidget, 
+                             QPushButton, QPlainTextEdit, QHBoxLayout, QVBoxLayout, QGridLayout, QWidget)
 
 class ClasificacionDlg(QMainWindow):
     
@@ -21,6 +22,8 @@ class ClasificacionDlg(QMainWindow):
     def initUI(self):
         
         print(len(Observable.__subclasses__()))
+        
+        widgetCentral = QWidget()
         
         num_observable = len(Observable.__subclasses__())
 
@@ -60,24 +63,25 @@ class ClasificacionDlg(QMainWindow):
         self.buttonsLayout.addWidget(self.diagnosticaButton)
         self.buttonsLayout.addStretch()
         
-        layoutObservables = QHBoxLayout()
+        layoutObservables = QVBoxLayout()
         layoutObservables.addWidget(labelFallosA)
         layoutObservables.addWidget(self.tablaObservables)
         
-        layoutHipotesis = QHBoxLayout()
+        layoutHipotesis = QVBoxLayout()
         layoutHipotesis.addWidget(labelHipotesisL)
         layoutHipotesis.addWidget(self.listWidgetHipotesis)
         
-        layoutDiagnosticos = QHBoxLayout()
+        layoutDiagnosticos = QVBoxLayout()
         layoutDiagnosticos.addWidget(labelDiagnosticoL)
         layoutDiagnosticos.addWidget(self.listWidgetDiagnosticos)
  
-        layoutExplicacion = QHBoxLayout()
+        layoutExplicacion = QVBoxLayout()
         layoutExplicacion.addWidget(labelExplicacionL)
         layoutExplicacion.addWidget(self.PlainTextEditExplicacion)       
  
         layoutSeccionInferior = QGridLayout() 
         layoutSeccionInferior.addLayout(layoutDiagnosticos,0,0)
+
         
         layoutSeccionInferior.addLayout(layoutExplicacion,0,1)
         layoutSeccionInferior.setColumnStretch(0, 1)
@@ -85,28 +89,34 @@ class ClasificacionDlg(QMainWindow):
         
         layoutSeccionSuperior = QGridLayout() 
         layoutSeccionSuperior.addLayout(layoutObservables,0,0)
+        layoutSeccionInferior.setColumnStretch(0, 0)
+        layoutSeccionInferior.setColumnStretch(1, 1)
         
         layoutSeccionSuperior.addLayout(layoutHipotesis,0,1)
-        layoutSeccionSuperior.setColumnStretch(0, 1)
-        layoutSeccionSuperior.setColumnStretch(1, 2)
+
  
         #Diseño principal
         mainLayout = QVBoxLayout() #Se crea el diseño principal en forma vertical
         mainLayout.addLayout(layoutSeccionSuperior) 
         mainLayout.addLayout(layoutSeccionInferior) 
         mainLayout.addLayout(self.buttonsLayout) #Añadimos la disposicion de controles horizontal
-        self.setLayout(mainLayout) #Asignar a la ventana la distribucion de los controles
+        
+        widgetCentral.setLayout(mainLayout)
+        
+        self.setCentralWidget(widgetCentral)  #Asignar a la ventana la distribucion de los controles
         
     
         
         self.setWindowTitle(u'Aplicación para el Diagnostico - Ángel Fuentes y Christian Luna')
-        self.setGeometry(300, 300, 750, 650)
+        self.setGeometry(300, 300, 1335, 750)
         self.show()
 
+    
 
 
-
-
+    def rellenarObservables ():
+        print("Se rellenan los observables")
+    
 
 
 def main():
