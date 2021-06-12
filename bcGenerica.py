@@ -5,7 +5,7 @@ Created on Wed May  5 12:36:20 2021
 @author: Ángel
 """
 
-class Observable(object):
+class Observable():
     
     """Definicion generica de una observable"""
     def __init__(self, nombre = None, tipo = None, valoresPermitidos = None, valor = None):

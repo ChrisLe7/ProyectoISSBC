@@ -10,7 +10,8 @@ from os import listdir
 from importlib import import_module
 from bcGenerica import Observable
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QTableWidget, QLabel, QListWidget, 
-                             QPushButton, QPlainTextEdit, QHBoxLayout, QVBoxLayout, QGridLayout, QWidget)
+                             QPushButton, QPlainTextEdit, QHBoxLayout, QVBoxLayout, QGridLayout, QWidget, 
+                             QDesktopWidget)
 
 class ClasificacionDlg(QMainWindow):
     
@@ -20,9 +21,7 @@ class ClasificacionDlg(QMainWindow):
         self.initUI()
         
     def initUI(self):
-        
-        print(len(Observable.__subclasses__()))
-        
+                
         widgetCentral = QWidget()
         
         num_observable = len(Observable.__subclasses__())
@@ -32,7 +31,7 @@ class ClasificacionDlg(QMainWindow):
         labelFallosA = QLabel("Seleccione los valores para observables", self)
         labelFallosB = QLabel("", self)
         
-        self.tablaObservables = QTableWidget(num_observable,2) #Crea la tabla de elementos observables de dps columnas
+        self.tablaObservables = QTableWidget(num_observable,2) #Crea la tabla de elementos observables de dos columnas
         self.tablaObservables.setColumnWidth(0, 250) #Asignan ancho a las columnas
         self.tablaObservables.setColumnWidth(1, 400) #Asignan ancho a las columnas
         self.tablaObservables.setHorizontalHeaderLabels(cabeceraObservables) #Asignamos de esta forma la cabecera de la tabla
@@ -105,18 +104,21 @@ class ClasificacionDlg(QMainWindow):
         
         self.setCentralWidget(widgetCentral)  #Asignar a la ventana la distribucion de los controles
         
-    
-        
         self.setWindowTitle(u'Aplicación para el Diagnostico - Ángel Fuentes y Christian Luna')
-        self.setGeometry(300, 300, 1335, 750)
+        self.resize(1335, 750)
+        self.center()
         self.show()
 
-    
+    def center(self):
+        
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())    
 
-
-    def rellenarObservables ():
+    def rellenarObservables():
+        
         print("Se rellenan los observables")
-    
 
 
 def main():
