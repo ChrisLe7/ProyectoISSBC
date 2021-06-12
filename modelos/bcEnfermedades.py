@@ -123,7 +123,7 @@ def getObservables():
     '''
     Devuelve la lista de observables de la BC
     '''
-    obs=[]
+    obs = []
     obs.append(Escalofrios())
     obs.append(DolorCabeza())
     obs.append(DolorGarganta())
@@ -138,7 +138,6 @@ def getFallos():
     '''
     Devuelve la lista de fallos de la BC
     '''
-    
     fallos = []
     fallos.append(Estornudos())
     fallos.append(CongestionNasal())
