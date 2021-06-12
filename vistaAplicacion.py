@@ -28,8 +28,16 @@ class ClasificacionDlg(QMainWindow):
         num_observable = len(Observable.__subclasses__())
 
         cabeceraObservables = ['Observable', 'Valores Posibles']
+        cabeceraFallos = ['Fallo']
         #Para el tema de mostrar los fallos y observables utilizaremos el QTableWidget
-        labelFallosA = QLabel("Seleccione los valores para observables", self)
+       
+        labelFallosA = QLabel ("Seleccione los fallos existentes")
+        self.tablaFallos = QTableWidget(num_observable,1)
+        self.tablaFallos.setColumnWidth(0, 400) #Asignan ancho a las columnas
+        self.tablaFallos.setHorizontalHeaderLabels(cabeceraFallos) #Asignamos de esta forma la cabecera de la tabla
+        
+        
+        labelObservablesA = QLabel("Seleccione los valores para observables", self)
         labelFallosB = QLabel("", self)
         
         self.tablaObservables = QTableWidget(num_observable,2) #Crea la tabla de elementos observables de dps columnas
@@ -63,8 +71,16 @@ class ClasificacionDlg(QMainWindow):
         self.buttonsLayout.addWidget(self.diagnosticaButton)
         self.buttonsLayout.addStretch()
         
+        
+        #Ahora agruparemos los widgets en sus respectivos layouts
+       
+        layoutFallos = QVBoxLayout()
+        layoutFallos.addWidget(labelFallosA)
+        layoutFallos.addWidget(self.tablaFallos)
+        
+        
         layoutObservables = QVBoxLayout()
-        layoutObservables.addWidget(labelFallosA)
+        layoutObservables.addWidget(labelObservablesA)
         layoutObservables.addWidget(self.tablaObservables)
         
         layoutHipotesis = QVBoxLayout()
@@ -78,21 +94,21 @@ class ClasificacionDlg(QMainWindow):
         layoutExplicacion = QVBoxLayout()
         layoutExplicacion.addWidget(labelExplicacionL)
         layoutExplicacion.addWidget(self.PlainTextEditExplicacion)       
- 
+
+        #Layout Superior
+        
+        layoutSeccionSuperior = QGridLayout() 
+        
+        layoutSeccionSuperior.addLayout(layoutFallos,0,0)
+        layoutSeccionSuperior.addLayout(layoutObservables,0,2)        
+
+        layoutSeccionSuperior.addLayout(layoutHipotesis,0,3)
+
+        #Layout Inferior
         layoutSeccionInferior = QGridLayout() 
         layoutSeccionInferior.addLayout(layoutDiagnosticos,0,0)
 
-        
         layoutSeccionInferior.addLayout(layoutExplicacion,0,1)
-        layoutSeccionInferior.setColumnStretch(0, 1)
-        layoutSeccionInferior.setColumnStretch(1, 2)
-        
-        layoutSeccionSuperior = QGridLayout() 
-        layoutSeccionSuperior.addLayout(layoutObservables,0,0)
-        layoutSeccionInferior.setColumnStretch(0, 0)
-        layoutSeccionInferior.setColumnStretch(1, 1)
-        
-        layoutSeccionSuperior.addLayout(layoutHipotesis,0,1)
 
  
         #Diseño principal
