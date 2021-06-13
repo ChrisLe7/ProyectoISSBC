@@ -11,7 +11,7 @@ from importlib import import_module
 from bcGenerica import Observable
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QTableWidget, QLabel, QListWidget, 
                              QPushButton, QPlainTextEdit, QHBoxLayout, QVBoxLayout, QGridLayout, QWidget, 
-                             QDesktopWidget)
+                             QDesktopWidget, QAction)
 
 class ClasificacionDlg(QMainWindow):
     
@@ -121,6 +121,46 @@ class ClasificacionDlg(QMainWindow):
         
         widgetCentral.setLayout(mainLayout)
         
+        #Ahora crearemos la barra de menu 
+        #Creamos las acciones 
+        exitAct = QAction('Exit', self)
+        exitAct.setShortcut('Ctrl+Q')
+        exitAct.setStatusTip('Exit application')
+        exitAct.triggered.connect(self.close)
+        
+        reiniciarDatos = QAction('Reiniciar', self)
+        reiniciarDatos.setShortcut('Ctrl+R')
+        reiniciarDatos.setStatusTip('Reiniciar Datos Diagnosticos')
+        reiniciarDatos.triggered.connect(self.reiniciarDatos)
+        
+        diagnosticar = QAction('Diagnosticar', self)
+        diagnosticar.setShortcut('Ctrl+D')
+        diagnosticar.setStatusTip('Iniciar el Diagnostico')
+        diagnosticar.triggered.connect(self.diagnosticar)
+        
+        
+        
+        dominioEnfermedades = QAction('Enfermedades', self)
+        dominioEnfermedades.setShortcut('Ctrl+E')
+        dominioEnfermedades.setStatusTip('Cambiaremos el dominio del diagnostico')
+        dominioEnfermedades.triggered.connect(self.cambiarDominioEnfermedades)
+        
+        dominioSegundo = QAction('SegundoDominio', self)
+        dominioSegundo.setShortcut('Ctrl+X')
+        dominioSegundo.setStatusTip('Cambiaremos el dominio del diagnostico')
+        dominioSegundo.triggered.connect(self.cambiarDominioSegundo)
+        
+        #Creamos la barra del menu y añadimos las opciones
+        menubar = self.menuBar()
+        eleccionDominio = menubar.addMenu('&Dominio')
+        eleccionDominio.addAction(dominioEnfermedades)
+        eleccionDominio.addAction(dominioSegundo)
+        
+        opcionesDiagnostico = menubar.addMenu('&Opciones')
+        opcionesDiagnostico.addAction(diagnosticar)
+        opcionesDiagnostico.addAction(reiniciarDatos)
+        opcionesDiagnostico.addAction(exitAct)
+        
         self.setCentralWidget(widgetCentral)  #Asignar a la ventana la distribucion de los controles
         
         self.setWindowTitle(u'Aplicación para el Diagnostico - Ángel Fuentes y Christian Luna')
@@ -135,10 +175,21 @@ class ClasificacionDlg(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())    
 
-    def rellenarObservables():
+    def rellenarObservables(self):
         
         print("Se rellenan los observables")
+    
+    def cambiarDominioEnfermedades(self):
+        print("Cambiaremos el dominio al Medico")
 
+    def cambiarDominioSegundo(self):
+        print("Cambiaremos el dominio")
+        
+    def reiniciarDatos(self):
+        print ('Reiniciar los datos')
+        
+    def diagnosticar(self):
+        print ('Realizar Diagnostico')
 
 def main():
     app = QApplication(sys.argv)
