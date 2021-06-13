@@ -8,10 +8,11 @@ Created on Sun May  2 19:53:04 2021
 import sys
 from os import listdir
 from importlib import import_module
-from bcGenerica import Observable
+from PyQt5.QtCore import Qt
+import controladorAplicacion as ctrl
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QTableWidget, QLabel, QListWidget, 
                              QPushButton, QPlainTextEdit, QHBoxLayout, QVBoxLayout, QGridLayout, QWidget, 
-                             QDesktopWidget, QAction)
+                             QDesktopWidget, QAction, QTableWidgetItem, QComboBox)
 
 class ClasificacionDlg(QMainWindow):
     
@@ -24,29 +25,28 @@ class ClasificacionDlg(QMainWindow):
                 
         widgetCentral = QWidget()
         
-        num_observable = len(Observable.__subclasses__())
-
         cabeceraObservables = ['Observable', 'Valores Posibles']
         cabeceraFallos = ['Fallo']
         #Para el tema de mostrar los fallos y observables utilizaremos el QTableWidget
        
         labelFallosA = QLabel ("Seleccione los fallos existentes")
-        self.tablaFallos = QTableWidget(num_observable,1)
+        self.tablaFallos = QTableWidget(len(ctrl.getFallos()), 1)
         self.tablaFallos.setColumnWidth(0, 250) #Asignan ancho a las columnas
         self.tablaFallos.setHorizontalHeaderLabels(cabeceraFallos) #Asignamos de esta forma la cabecera de la tabla
-        
+        self.rellenarFallos()
         
         labelObservablesA = QLabel("Seleccione los valores para observables", self)
         labelFallosB = QLabel("", self)
         
-        self.tablaObservables = QTableWidget(num_observable,2) #Crea la tabla de elementos observables de dos columnas
+        self.tablaObservables = QTableWidget(len(ctrl.getObservables()), 2) #Crea la tabla de elementos observables de dos columnas
         self.tablaObservables.setColumnWidth(0, 350) #Asignan ancho a las columnas
         self.tablaObservables.setColumnWidth(1, 400) #Asignan ancho a las columnas
         self.tablaObservables.setHorizontalHeaderLabels(cabeceraObservables) #Asignamos de esta forma la cabecera de la tabla
+        self.rellenarObservables()
         
         #Listado de las posibles hipotesis que se puedan dar
 
-        labelHipotesisL=QLabel("Posibles Hipotesis A buscar",self)#Creamos un listwidget para las posibles hipotesis
+        labelHipotesisL=QLabel("Posibles Hipotesis a buscar",self)#Creamos un listwidget para las posibles hipotesis
         labelHipotesisR=QLabel("",self)
         self.listWidgetHipotesis = QListWidget()#Lista de hipotesis
         
@@ -64,7 +64,7 @@ class ClasificacionDlg(QMainWindow):
           
         #Botones
         self.diagnosticaButton=QPushButton('Diagnosticar') #Para ejecutar el diagnostico
-        
+        self.diagnosticaButton.clicked.connect(self.diagnosticar)
         self.buttonsLayout = QHBoxLayout() #Gestor de diseño horizontal
         self.buttonsLayout.addStretch() 
         self.buttonsLayout.addWidget(self.diagnosticaButton)
@@ -178,6 +178,35 @@ class ClasificacionDlg(QMainWindow):
     def rellenarObservables(self):
         
         print("Se rellenan los observables")
+        
+        observables = ctrl.getObservables()
+        
+        for i in range(len(observables)):
+            item = QTableWidgetItem(observables[i].nombre)
+            item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+            opciones = QComboBox()
+            
+            if (observables[i].tipo == 'multiple'):
+                for j in observables[i].valoresPermitidos:
+                    opciones.addItem(j)
+            else:
+                opciones.addItem('True')
+                opciones.addItem('False')
+                
+            self.tablaObservables.setItem(i, 0, item)
+            self.tablaObservables.setCellWidget(i, 1, opciones)
+        
+    def rellenarFallos(self):
+        
+        print("Se rellenan los fallos")
+        
+        fallos = ctrl.getFallos()
+        
+        for i in range(len(fallos)):
+            item = QTableWidgetItem(fallos[i].nombre)
+            item.setCheckState(Qt.Unchecked)
+            item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+            self.tablaFallos.setItem(i, 0, item)
     
     def cambiarDominioEnfermedades(self):
         print("Cambiaremos el dominio al Medico")
@@ -190,6 +219,16 @@ class ClasificacionDlg(QMainWindow):
         
     def diagnosticar(self):
         print ('Realizar Diagnostico')
+        
+        fallos = []
+        
+        for i in range(self.tablaFallos.rowCount()):
+            item = self.tablaFallos.item(i, 0)
+            
+            if (item.checkState() == Qt.Checked):
+                fallos.append(item.text())
+        
+        #ctrl.eventoDiagnosticar(fallos)
 
 def main():
     app = QApplication(sys.argv)

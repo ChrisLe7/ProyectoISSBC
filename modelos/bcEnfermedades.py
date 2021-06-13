@@ -15,7 +15,7 @@ class Estornudos(Observable):
         nombre = 'Estornuda a menudo '
         tipo = 'boleano'
         valoresPermitidos = None
-        super().__init__(self, nombre, tipo, valoresPermitidos, valor)
+        super().__init__(nombre, tipo, valoresPermitidos, valor)
         self.ayuda = '''El paciente estornuda a menudo'''
         
 class CongestionNasal(Observable):
@@ -25,7 +25,7 @@ class CongestionNasal(Observable):
         nombre = 'Tiene congestion nasal'
         tipo = 'boleano'
         valoresPermitidos = None
-        super().__init__(self, nombre, tipo, valoresPermitidos, valor)
+        super().__init__(nombre, tipo, valoresPermitidos, valor)
         self.ayuda = '''El paciente presenta congestion nasal'''
         
 class Tos(Observable):
@@ -35,7 +35,7 @@ class Tos(Observable):
         nombre = 'Tose'
         tipo = 'boleano'
         valoresPermitidos = None
-        super().__init__(self, nombre, tipo, valoresPermitidos, valor)
+        super().__init__(nombre, tipo, valoresPermitidos, valor)
         self.ayuda = '''El paciente tiene tos'''
         
 class Diarrea(Observable):
@@ -45,7 +45,7 @@ class Diarrea(Observable):
         nombre = 'Tiene diarrea'
         tipo = 'boleano'
         valoresPermitidos = None
-        super().__init__(self, nombre, tipo, valoresPermitidos, valor)
+        super().__init__(nombre, tipo, valoresPermitidos, valor)
         self.ayuda = '''El paciente tiene diarrea'''
         
 class Vomitos(Observable): 
@@ -55,7 +55,7 @@ class Vomitos(Observable):
         nombre = 'Tiene vomitos'
         tipo = 'boleano'
         valoresPermitidos = None
-        super().__init__(self, nombre, tipo, valoresPermitidos, valor)
+        super().__init__(nombre, tipo, valoresPermitidos, valor)
         self.ayuda = '''El paciente vomita'''
 
 class Escalofrios(Observable):
@@ -65,7 +65,7 @@ class Escalofrios(Observable):
         nombre = 'Tiene escalofrios'
         tipo = 'boleano'
         valoresPermitidos = None
-        super().__init__(self, nombre, tipo, valoresPermitidos, valor)
+        super().__init__(nombre, tipo, valoresPermitidos, valor)
         self.ayuda = '''El paciente tiene escalofrios'''
         
 class DolorCabeza(Observable):
@@ -75,7 +75,7 @@ class DolorCabeza(Observable):
         nombre = 'Tiene dolor de cabeza'
         tipo = 'multiple'
         valoresPermitidos = ['Nada', 'Leve', 'Moderado', 'Severo']
-        super().__init__(self, nombre, tipo, valoresPermitidos, valor)
+        super().__init__(nombre, tipo, valoresPermitidos, valor)
         self.ayuda = '''El paciente tiene dolor de cabeza'''
 
 class DolorGarganta(Observable):
@@ -85,7 +85,7 @@ class DolorGarganta(Observable):
         nombre = 'Tiene dolor de garganta'
         tipo = 'multiple'
         valoresPermitidos = ['Nada', 'Leve', 'Moderado', 'Severo']
-        super().__init__(self, nombre, tipo, valoresPermitidos, valor)
+        super().__init__(nombre, tipo, valoresPermitidos, valor)
         self.ayuda = '''El paciente tiene dolor de garganta'''
         
 class Fiebre(Observable):
@@ -95,7 +95,7 @@ class Fiebre(Observable):
         nombre = 'Tiene fiebre'
         tipo = 'boleano'
         valoresPermitidos = None
-        Observable.__init__(self, nombre, tipo, valoresPermitidos, valor)
+        super().__init__(nombre, tipo, valoresPermitidos, valor)
         self.ayuda = '''El paciente tiene fiebre'''
 
 class Nauseas(Observable):
@@ -105,7 +105,7 @@ class Nauseas(Observable):
         nombre = 'Tiene nauseas'
         tipo = 'boleano'
         valoresPermitidos = None
-        super().__init__(self, nombre, tipo, valoresPermitidos, valor)
+        super().__init__(nombre, tipo, valoresPermitidos, valor)
         self.ayuda = '''El paciente tiene nauseas'''
 
 class DolorAbdominal(Observable): 
@@ -115,7 +115,7 @@ class DolorAbdominal(Observable):
         nombre = 'Tiene dolor abdominal'
         tipo = 'boleano'
         valoresPermitidos = None
-        super().__init__(self, nombre, tipo, valoresPermitidos, valor)
+        super().__init__(nombre, tipo, valoresPermitidos, valor)
         self.ayuda = '''El paciente tiene dolor abdominal'''
 
 def getObservables():
