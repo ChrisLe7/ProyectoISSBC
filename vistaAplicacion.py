@@ -32,7 +32,7 @@ class ClasificacionDlg(QMainWindow):
        
         labelFallosA = QLabel ("Seleccione los fallos existentes")
         self.tablaFallos = QTableWidget(num_observable,1)
-        self.tablaFallos.setColumnWidth(0, 400) #Asignan ancho a las columnas
+        self.tablaFallos.setColumnWidth(0, 250) #Asignan ancho a las columnas
         self.tablaFallos.setHorizontalHeaderLabels(cabeceraFallos) #Asignamos de esta forma la cabecera de la tabla
         
         
@@ -40,7 +40,7 @@ class ClasificacionDlg(QMainWindow):
         labelFallosB = QLabel("", self)
         
         self.tablaObservables = QTableWidget(num_observable,2) #Crea la tabla de elementos observables de dos columnas
-        self.tablaObservables.setColumnWidth(0, 250) #Asignan ancho a las columnas
+        self.tablaObservables.setColumnWidth(0, 350) #Asignan ancho a las columnas
         self.tablaObservables.setColumnWidth(1, 400) #Asignan ancho a las columnas
         self.tablaObservables.setHorizontalHeaderLabels(cabeceraObservables) #Asignamos de esta forma la cabecera de la tabla
         
@@ -99,9 +99,12 @@ class ClasificacionDlg(QMainWindow):
         layoutSeccionSuperior = QGridLayout() 
         
         layoutSeccionSuperior.addLayout(layoutFallos,0,0)
-        layoutSeccionSuperior.addLayout(layoutObservables,0,2)        
+        layoutSeccionSuperior.setColumnStretch (0,1)
+        layoutSeccionSuperior.addLayout(layoutObservables,0,1)        
+        layoutSeccionSuperior.setColumnStretch (1,3)    
 
-        layoutSeccionSuperior.addLayout(layoutHipotesis,0,3)
+        
+        layoutSeccionSuperior.addLayout(layoutHipotesis,0,2)
 
         #Layout Inferior
         layoutSeccionInferior = QGridLayout() 
@@ -121,7 +124,7 @@ class ClasificacionDlg(QMainWindow):
         self.setCentralWidget(widgetCentral)  #Asignar a la ventana la distribucion de los controles
         
         self.setWindowTitle(u'Aplicación para el Diagnostico - Ángel Fuentes y Christian Luna')
-        self.resize(1335, 750)
+        self.resize(1300, 750)
         self.center()
         self.show()
 
