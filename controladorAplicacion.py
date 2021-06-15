@@ -11,10 +11,10 @@ import modeloAplicacion as modelo
 import modelos.bcEnfermedades as bc
     
 """Método utilizado para diagnosticar (llamar al método de cobertura causal)"""    
-def eventoDiagnosticar(fallos):
+def eventoDiagnosticar(fallos, observables):
     
-    metodo = modelo.MetodoCoberturaCausal(fallos)
-    metodo.execute()
+    metodo = modelo.MetodoCoberturaCausal(fallos, observables)
+    return metodo.execute(True)
     
 def getObservables():
     

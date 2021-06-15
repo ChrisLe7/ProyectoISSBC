@@ -190,8 +190,8 @@ class ClasificacionDlg(QMainWindow):
                 for j in observables[i].valoresPermitidos:
                     opciones.addItem(j)
             else:
-                opciones.addItem('True')
                 opciones.addItem('False')
+                opciones.addItem('True')
                 
             self.tablaObservables.setItem(i, 0, item)
             self.tablaObservables.setCellWidget(i, 1, opciones)
@@ -228,7 +228,17 @@ class ClasificacionDlg(QMainWindow):
             if (item.checkState() == Qt.Checked):
                 fallos.append(item.text())
         
-        #ctrl.eventoDiagnosticar(fallos)
+        observables = []
+        
+        for i in range(self.tablaObservables.rowCount()):
+            item1=self.tablaObservables.item(i,0)
+            item2=self.tablaObservables.cellWidget(i, 1)
+            observables.append((item1.text() , item2.currentText()))
+        
+        explicacion = ctrl.eventoDiagnosticar(fallos, observables)
+        
+        """TEMPORAL"""
+        self.PlainTextEditExplicacion.setPlainText(explicacion)
 
 def main():
     app = QApplication(sys.argv)

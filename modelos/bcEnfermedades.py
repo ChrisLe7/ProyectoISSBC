@@ -8,56 +8,6 @@ Created on Thu May  6 13:52:00 2021
 from bcGenerica import Observable, Hipotesis
 
 #Observables
-class Estornudos(Observable):
-    
-    def __init__(self, valor = None):
-        
-        nombre = 'Estornuda a menudo '
-        tipo = 'boleano'
-        valoresPermitidos = None
-        super().__init__(nombre, tipo, valoresPermitidos, valor)
-        self.ayuda = '''El paciente estornuda a menudo'''
-        
-class CongestionNasal(Observable):
-    
-    def __init__(self, valor = None):
-        
-        nombre = 'Tiene congestion nasal'
-        tipo = 'boleano'
-        valoresPermitidos = None
-        super().__init__(nombre, tipo, valoresPermitidos, valor)
-        self.ayuda = '''El paciente presenta congestion nasal'''
-        
-class Tos(Observable):
-    
-    def __init__(self, valor = None):
-        
-        nombre = 'Tose'
-        tipo = 'boleano'
-        valoresPermitidos = None
-        super().__init__(nombre, tipo, valoresPermitidos, valor)
-        self.ayuda = '''El paciente tiene tos'''
-        
-class Diarrea(Observable):
-    
-    def __init__(self, valor = None):
-        
-        nombre = 'Tiene diarrea'
-        tipo = 'boleano'
-        valoresPermitidos = None
-        super().__init__(nombre, tipo, valoresPermitidos, valor)
-        self.ayuda = '''El paciente tiene diarrea'''
-        
-class Vomitos(Observable): 
-    
-    def __init__(self, valor = None):
-        
-        nombre = 'Tiene vomitos'
-        tipo = 'boleano'
-        valoresPermitidos = None
-        super().__init__(nombre, tipo, valoresPermitidos, valor)
-        self.ayuda = '''El paciente vomita'''
-
 class Escalofrios(Observable):
     
     def __init__(self, valor = None):
@@ -133,6 +83,57 @@ def getObservables():
     
     return obs
 
+#Fallos
+class Estornudos(Observable):
+    
+    def __init__(self, valor = None):
+        
+        nombre = 'Estornuda a menudo '
+        tipo = 'boleano'
+        valoresPermitidos = None
+        super().__init__(nombre, tipo, valoresPermitidos, valor)
+        self.ayuda = '''El paciente estornuda a menudo'''
+        
+class CongestionNasal(Observable):
+    
+    def __init__(self, valor = None):
+        
+        nombre = 'Tiene congestion nasal'
+        tipo = 'boleano'
+        valoresPermitidos = None
+        super().__init__(nombre, tipo, valoresPermitidos, valor)
+        self.ayuda = '''El paciente presenta congestion nasal'''
+        
+class Tos(Observable):
+    
+    def __init__(self, valor = None):
+        
+        nombre = 'Tose'
+        tipo = 'boleano'
+        valoresPermitidos = None
+        super().__init__(nombre, tipo, valoresPermitidos, valor)
+        self.ayuda = '''El paciente tiene tos'''
+        
+class Diarrea(Observable):
+    
+    def __init__(self, valor = None):
+        
+        nombre = 'Tiene diarrea'
+        tipo = 'boleano'
+        valoresPermitidos = None
+        super().__init__(nombre, tipo, valoresPermitidos, valor)
+        self.ayuda = '''El paciente tiene diarrea'''
+        
+class Vomitos(Observable): 
+    
+    def __init__(self, valor = None):
+        
+        nombre = 'Tiene vomitos'
+        tipo = 'boleano'
+        valoresPermitidos = None
+        super().__init__(nombre, tipo, valoresPermitidos, valor)
+        self.ayuda = '''El paciente vomita'''
+
 def getFallos():
     
     '''
@@ -146,6 +147,77 @@ def getFallos():
     fallos.append(Vomitos())
     
     return fallos
+
+#Hipotesis
+class Resfriado(Hipotesis):
+    
+    def __init__(self):
+        
+        super().__init__(nombre = 'Esta resfriado')
+        #Creamos instancias de observables
+        
+        f1=CongestionNasal(True)
+        f2=Estornudos(True)
+        
+        o1=DolorCabeza(['Moderado'])
+        o3=DolorGarganta(['Moderado'])
+
+        self.fallos = [f1, f2]
+        self.debePresentar = [f1, f2]
+        self.noPuedePresentar = [o1, o3]
+        self.ayuda = u'Esta resfriado'
+
+class Gripe(Hipotesis):
+    
+    def __init__(self):
+        
+        super().__init__(nombre = 'Tiene gripe')
+        #Creamos instancias de observables
+        
+        f1=Tos(True)             
+        
+        o1=Escalofrios(True)
+        o2=Fiebre(True)
+
+        o7=Vomitos(True)
+        o8=Diarrea(True)        
+        
+        self.fallos = [f1]
+        self.debePresentar = [o1, o2]
+        self.noPuedePresentar = [o7, o8]
+        self.ayuda = u'Tiene gripe'
+
+class Gastroenteritis(Hipotesis):
+    
+    def __init__(self):
+        
+        super().__init__(nombre = 'Tiene gastroenteritis')
+        #Creamos instancias de observables
+        
+        f1=Vomitos(True)
+        f2=Diarrea(True)
+        
+        o1=Nauseas(True)
+        o2=DolorAbdominal(True)
+        o3=Estornudos(True)
+
+        self.fallos = [f1, f2]
+        self.debePresentar = [o1, o2]
+        self.noPuedePresentar = [o3]
+        self.ayuda = u'Tiene gastroenteritis'
+        
+def getHipotesis():
+    
+    '''
+    Devuelve la lista de hipotesis de la BC
+    '''
+    hipotesis = []
+    
+    hipotesis.append(Resfriado())
+    hipotesis.append(Gripe())
+    hipotesis.append(Gastroenteritis())
+    
+    return hipotesis
 
 def creaObservable(tp):
     
@@ -243,61 +315,3 @@ def creaObservable(tp):
         return ob           
     
     return None
-
-#Hipotesis
-class Resfriado(Hipotesis):
-    
-    def __init__(self):
-        
-        super().__init__(self, nombre = 'Esta resfriado')
-        #Creamos instancias de observables
-        
-        f1=CongestionNasal(True)
-        f2=Estornudos(True)
-        
-        o1=DolorCabeza(['Moderado'])
-        o3=DolorGarganta(['Moderado'])
-
-        self.fallos = [f1, f2]
-        self.debePresentar = [f1, f2]
-        self.noPuedePresentar = [o1, o3]
-        self.ayuda = u'Esta resfriado'
-
-class Gripe(Hipotesis):
-    
-    def __init__(self):
-        
-        super().__init__(self, nombre = 'Tiene gripe')
-        #Creamos instancias de observables
-        
-        f1=Tos(True)             
-        
-        o1=Escalofrios(True)
-        o2=Fiebre(True)
-
-        o7=Vomitos(True)
-        o8=Diarrea(True)        
-        
-        self.fallos = [f1]
-        self.debePresentar = [o1, o2]
-        self.noPuedePresentar = [o7, o8]
-        self.ayuda = u'Tiene gripe'
-
-class Gastroenteritis(Hipotesis):
-    
-    def __init__(self):
-        
-        super().__init__(self, nombre = 'Tiene gastroenteritis')
-        #Creamos instancias de observables
-        
-        f1=Vomitos(True)
-        f2=Diarrea(True)
-        
-        o1=Nauseas(True)
-        o2=DolorAbdominal(True)
-        o3=Estornudos(True)
-
-        self.fallos = [f1, f2]
-        self.debePresentar = [o1, o2]
-        self.noPuedePresentar = [o3]
-        self.ayuda = u'Tiene gastroenteritis'
