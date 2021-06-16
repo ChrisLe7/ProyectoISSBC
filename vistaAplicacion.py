@@ -6,13 +6,12 @@ Created on Sun May  2 19:53:04 2021
 """
 
 import sys
-from os import listdir
-from importlib import import_module
 from PyQt5.QtCore import Qt
 import controladorAplicacion as ctrl
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QTableWidget, QLabel, QListWidget, 
                              QPushButton, QPlainTextEdit, QHBoxLayout, QVBoxLayout, QGridLayout, QWidget, 
                              QDesktopWidget, QAction, QTableWidgetItem, QComboBox)
+from PyQt5.QtGui import QIcon
 
 class ClasificacionDlg(QMainWindow):
     
@@ -36,7 +35,6 @@ class ClasificacionDlg(QMainWindow):
         self.rellenarFallos()
         
         labelObservablesA = QLabel("Seleccione los valores para observables", self)
-        labelFallosB = QLabel("", self)
         
         self.tablaObservables = QTableWidget(len(ctrl.getObservables()), 2) #Crea la tabla de elementos observables de dos columnas
         self.tablaObservables.setColumnWidth(0, 350) #Asignan ancho a las columnas
@@ -47,20 +45,17 @@ class ClasificacionDlg(QMainWindow):
         #Listado de las posibles hipotesis que se puedan dar
 
         labelHipotesisL=QLabel("Posibles Hipotesis",self)#Creamos un listwidget para las posibles hipotesis
-        labelHipotesisR=QLabel("",self)
         self.listWidgetHipotesis = QListWidget()#Lista de hipotesis
         #self.rellenarPosiblesHipotesis()
         
         #ListWidget para el diagnostico
         labelDiagnosticoL=QLabel("Diagnostico Encontrado",self)
-        labelDiagnosticoR=QLabel("",self)
         self.listWidgetDiagnosticos = QListWidget()#Lista de diagnosticos
         
         
         #Texto de explicación del diagnostico
           
         labelExplicacionL=QLabel("Explicacion",self)
-        labelExplicacionR=QLabel("     ",self)
         self.PlainTextEditExplicacion = QPlainTextEdit("Todavía no se ha realizado al diagnostico")#Cuadro de texto de la explicacion 
           
         #Botones
@@ -166,6 +161,7 @@ class ClasificacionDlg(QMainWindow):
         
         self.setWindowTitle(u'Aplicación para el Diagnostico - Ángel Fuentes y Christian Luna')
         self.resize(1300, 750)
+        self.setWindowIcon(QIcon('imagenes/Logo_UCO.png'))
         self.center()
         self.show()
 
