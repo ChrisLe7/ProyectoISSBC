@@ -40,7 +40,7 @@ class ClasificacionDlg(QMainWindow):
         
         self.tablaObservables = QTableWidget(len(ctrl.getObservables()), 2) #Crea la tabla de elementos observables de dos columnas
         self.tablaObservables.setColumnWidth(0, 350) #Asignan ancho a las columnas
-        self.tablaObservables.setColumnWidth(1, 400) #Asignan ancho a las columnas
+        self.tablaObservables.setColumnWidth(1, 385) #Asignan ancho a las columnas
         self.tablaObservables.setHorizontalHeaderLabels(cabeceraObservables) #Asignamos de esta forma la cabecera de la tabla
         self.rellenarObservables()
         
@@ -49,6 +49,7 @@ class ClasificacionDlg(QMainWindow):
         labelHipotesisL=QLabel("Posibles Hipotesis a buscar",self)#Creamos un listwidget para las posibles hipotesis
         labelHipotesisR=QLabel("",self)
         self.listWidgetHipotesis = QListWidget()#Lista de hipotesis
+        self.rellenarPosiblesHipotesis()
         
         #ListWidget para el diagnostico
         labelDiagnosticoL=QLabel("Diagnostico Encontrado",self)
@@ -208,6 +209,15 @@ class ClasificacionDlg(QMainWindow):
             item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
             self.tablaFallos.setItem(i, 0, item)
     
+    def rellenarPosiblesHipotesis(self):
+        
+        print("Se rellenan las posibles hipotesis")
+        
+        posiblesHipotesis = ctrl.getPosiblesHipotesis()
+        
+        for i in range(len(posiblesHipotesis)):
+            self.listWidgetHipotesis.addItem(posiblesHipotesis[i].nombre)            
+            
     def cambiarDominioEnfermedades(self):
         print("Cambiaremos el dominio al Medico")
 
@@ -216,6 +226,8 @@ class ClasificacionDlg(QMainWindow):
         
     def reiniciarDatos(self):
         print ('Reiniciar los datos')
+        self.rellenarObservables()
+        self.rellenarFallos()
         
     def diagnosticar(self):
         print ('Realizar Diagnostico')

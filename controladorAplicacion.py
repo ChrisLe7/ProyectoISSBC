@@ -23,3 +23,7 @@ def getObservables():
 def getFallos():
     
     return bc.getFallos()
+
+def getPosiblesHipotesis():
+    
+    return bc.getHipotesis()
