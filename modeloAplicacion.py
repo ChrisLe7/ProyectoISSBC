@@ -234,7 +234,7 @@ class Verificar(Inferencia):
                 self.explicacion += '] porque presenta el fallo ['
                 self.explicacion += str(f.nombre) + '] con valor ' + str(f.valor) + '.\n'
             else:
-                self.explicacion += u'    ( - ) No puede ser ['
+                self.explicacion += u'    (-) No puede ser ['
                 self.explicacion += str(self.hipotesis.nombre)
                 self.explicacion += u'] porque deberia presentar el fallo ['
                 self.explicacion += str(f.nombre) + '] con valor apropiado.\n'
@@ -266,11 +266,11 @@ class Verificar(Inferencia):
                                 break
                         
                 if falla: #Si falla quiere decir que el valor no coincide
-                    self.explicacion += u'    ( - ) No puede ser ['
+                    self.explicacion += u'    (-) No puede ser ['
                     self.explicacion += str(self.hipotesis.nombre)
                     self.explicacion += u'] porque deberia presentar el observable ['
                     self.explicacion += str(fh.nombre) + '] con valor apropiado.\n'
-                    resultado = False             
+                    resultado = False
                      
             if resultado == False: #Si ha resultado fallida la verificación salimos de la verificación.
                 self.resultado = False
@@ -282,27 +282,37 @@ class Verificar(Inferencia):
                  
         #Eliminar aquellas hipotesis que tenga algun fallo en no debe tener
         for f in self.hipotesis.noPuedePresentar:
+            falla = False #Bandera
+            
             for e in self.hallazgos:
-                #if (f.nombre, f.valor) in [(e.nombre, e.valor) for e in self.hallazgos]:
-                if e.nombre == f.nombre:
-                    if e.valor in f.valor: 
-                        self.resultado = False
-                        self.explicacion += u'    ( - ) No puede ser ['
-                        self.explicacion += str(self.hipotesis.nombre)
-                        self.explicacion += u'] porque no puede presentar el observable ['
-                        self.explicacion += f.nombre + '] con valor '
-                        self.explicacion += str(f.valor) + '\n'
-                        resultado = False
-                    else:
-                        self.explicacion += u'    ( + ) Puede ser ['
-                        self.explicacion += str(self.hipotesis.nombre)
-                        self.explicacion += u'] porque no presenta el observable ['
-                        self.explicacion += f.nombre + '] con valor '
-                        self.explicacion += str(f.valor) + '\n'
-                     
-                if resultado == False:
-                    self.resultado = False
-                    return (False, self.explicacion)
-
+                if e.nombre == f.nombre: #comprueba que coincide en valores
+                    if isinstance(f.valor, list): #Si el valor del fallo de la hipótesis es de tipo lista
+                        if e.valor in f.valor: #Comprueba que el valor del fallo presentado está en esa lista
+                            falla = True #El valor del fallo presentado no está en la lista
+                            break
+                    else: #El valor del fallo de la hipótesis no es de tipo lista
+                        if e.valor == f.valor: #Si no coincide los valores falla
+                            falla = True #El valor del fallo presentado no está en la lista
+                            break
+                        
+            if falla: #Si falla quiere decir que el valor no coincide
+                self.resultado = False
+                self.explicacion += u'    (-) No puede ser ['
+                self.explicacion += str(self.hipotesis.nombre)
+                self.explicacion += u'] porque no puede presentar el observable ['
+                self.explicacion += f.nombre + '] con valor '
+                self.explicacion += str(f.valor) + '\n'
+                resultado = False
+            else:
+                self.explicacion += u'    (+) Puede ser ['
+                self.explicacion += str(self.hipotesis.nombre)
+                self.explicacion += u'] porque no presenta el observable ['
+                self.explicacion += f.nombre + '] con valor '
+                self.explicacion += str(f.valor) + '\n'
+                
+            if resultado == False:
+                self.resultado = False
+                return (False, self.explicacion)
+            
         self.resultado = True
         return (True, self.explicacion)
