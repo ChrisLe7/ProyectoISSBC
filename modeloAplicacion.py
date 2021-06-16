@@ -45,7 +45,7 @@ class MetodoCoberturaCausal():
         
         #Ejecucion del metodo de cobertura causal para la tarea de diagnostico
         self.explicacion += u'Ejecutando cobertura causal.\n'
-        
+        self.diagnosticoEncontrado = []
         #Se obtiene el conjunto diferencial invocando a la inferencia de cobertura causal
         cc = Cubrir(self.fallos)
         self.diferencial = cc.execute(True) #Devuelve una lista con las posibles hipotesis
@@ -99,19 +99,20 @@ class MetodoCoberturaCausal():
                             if tr:
                                 print ("Verificacion completada. No puede ser, por lo tanto se borra la hipotesis\n")
                                 self.explicacion += verifica[1]
-                                
+                                if self.diagnosticoEncontrado.count(i.nombre) != 0:
+                                    self.diagnosticoEncontrado.remove(i.nombre)
                                 if i in self.diagnostico:
                                     self.diagnostico.remove(i) #vamos eliminando aquellas hipotesis que sean falsas
                         #si verificar es falso para esa hipotesis, esta será eliminada del conjunto diagnostico que contendrá la solucion final(averia) o soluciones
                         else:
                             if tr:
                                 print ("Verificacion completada. Si puede ser, por lo tanto se mantiene la hipotesis\n")
-                           
+                            if self.diagnosticoEncontrado.count(i.nombre) == 0:
+                                self.diagnosticoEncontrado.append(i.nombre)
                             self.explicacion += verifica[1]
                             
                 self.observables.pop(0)
-                
-            return self.explicacion
+            return self.explicacion,self.diagnosticoEncontrado
             
 class Inferencia():
     

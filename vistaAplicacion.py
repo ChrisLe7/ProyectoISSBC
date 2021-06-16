@@ -228,6 +228,8 @@ class ClasificacionDlg(QMainWindow):
         print ('Reiniciar los datos')
         self.rellenarObservables()
         self.rellenarFallos()
+        self.PlainTextEditExplicacion.setPlainText("Se ha reiniciado el Sistema")
+        self.listWidgetDiagnosticos.clear()
         
     def diagnosticar(self):
         print ('Realizar Diagnostico')
@@ -247,10 +249,13 @@ class ClasificacionDlg(QMainWindow):
             item2=self.tablaObservables.cellWidget(i, 1)
             observables.append((item1.text() , item2.currentText()))
         
-        explicacion = ctrl.eventoDiagnosticar(fallos, observables)
+        explicacion,diagnosticoDetectado = ctrl.eventoDiagnosticar(fallos, observables)
         
         """TEMPORAL"""
         self.PlainTextEditExplicacion.setPlainText(explicacion)
+        print(diagnosticoDetectado)
+        for i in range(len(diagnosticoDetectado)):
+            self.listWidgetDiagnosticos.addItem(diagnosticoDetectado[i])       
 
 def main():
     app = QApplication(sys.argv)
