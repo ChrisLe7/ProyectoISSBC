@@ -289,7 +289,7 @@ class ClasificacionDlg(QMainWindow):
         self.listWidgetHipotesis.clear()
         
     def diagnosticar(self):
-        print ('Realizar Diagnostico')
+        print ('Realizar Diagnostico\n')
         
         self.PlainTextEditExplicacion.setPlainText("")
         self.listWidgetDiagnosticos.clear()
@@ -314,7 +314,6 @@ class ClasificacionDlg(QMainWindow):
         
         """TEMPORAL"""
         self.PlainTextEditExplicacion.setPlainText(explicacion)
-        print(diagnosticoDetectado)
         
         for h in diferencial:
             self.listWidgetHipotesis.addItem(h.nombre)

@@ -43,12 +43,14 @@ class MetodoCoberturaCausal():
         
     def execute(self, tr = False):
         
+        if self.fallos == []:
+            return 'No se han seleccionado fallos', [], []
+        
         #Ejecucion del metodo de cobertura causal para la tarea de diagnostico
         self.explicacion += u'Ejecutando cobertura causal.\n'
         self.diagnosticoEncontrado = []
         #Se obtiene el conjunto diferencial invocando a la inferencia de cobertura causal
-        cc = Cubrir(self.fallos)
-        self.diferencial = cc.execute() #Devuelve una lista con las posibles hipotesis
+        self.diferencial = Cubrir(self.fallos).execute() #Devuelve una lista con las posibles hipotesis
         
         self.explicacion+=u'\nSe obtiene el conjunto diferencial: \n'
         
@@ -67,17 +69,8 @@ class MetodoCoberturaCausal():
                 hipotesisSeleccionada = Seleccionar(self.diagnostico).execute() #Seleccionamos una de las posibles hipotesis
             
                 if tr: #Este if solo salta si estamos ejecutando para la terminal
-                    #print (len(self.diagnostico))
-                    #print (len(self.observables))
-                    
-                    #for d in self.diagnostico:
-                    #    print (d.nombre)
-                    
-                    print ("Observables:")
-                    print (self.observables)
+                    print ("Observables:", self.observables)
                     print ("=========================")
-                    #print ("Hipotesis seleccionada: ", hipotesisSeleccionada.nombre)
-                    #print ("======================")
             
                 #Ahora vamos a especificar un observable
                 observable = Especificar().execute(self.observables, self.observablesVistos) #Especificamos para obtener el observable
@@ -91,9 +84,9 @@ class MetodoCoberturaCausal():
                 #Ahora vamos a realizar la verificacion
                 for i in self.diferencial:
                     if i in self.diagnostico:
-                        self.explicacion += u'\n Probamos la  hipotesis de ' + str(i.nombre) + " con el observable " + str(observable.nombre) + '\n'
+                        self.explicacion += u'\n Probamos la  hipotesis de ' + str(i.nombre) + '\n'
                         
-                        verifica = Verificar(self.evidencias, i).execute() #aqui el verificar recibe la lista de evidencias u hallazgos y la posible hipótesis de solución
+                        verifica = Verificar(self.evidencias, i, self.fallos).execute() #aqui el verificar recibe la lista de evidencias u hallazgos y la posible hipótesis de solución
             
                         if verifica[0] is False: #Si la hipotesis no es posible se elimina del conjunto diferencial
                             if tr:
@@ -148,10 +141,9 @@ class Cubrir(Inferencia):
                     if i.nombre == f:
                         if not h in self.listaHipotesis:
                             self.listaHipotesis.append(h)
-                
+      
         if tr:
-            print ("Hipotesis posibles:")
-            print (h.nombre for h in self.listaHipotesis)
+            print ("Hipotesis posibles:", [h.nombre for h in self.listaHipotesis])
             print ("=========================")
         
         hipotesis = self.listaHipotesis
@@ -173,7 +165,7 @@ class Seleccionar(Inferencia):
             hipotesis = self.conjuntoDiferencial[0]
             
             if tr:
-                print ("Hipotesis seleccionada: ", hipotesis.nombre)
+                print ("Hipotesis seleccionada:", hipotesis.nombre)
                 print ("=========================")
         
         return hipotesis
@@ -191,7 +183,7 @@ class Especificar(Inferencia):
         listaObservablesVistos.append(listaObservables[0])
         
         if tr:
-            print ("Observable seleccionado: ", observable.nombre)
+            print ("Observable seleccionado:", observable.nombre)
             print ("=========================")
         
         return observable
@@ -208,7 +200,7 @@ class Obtener(Inferencia):
         hallazgo = Hallazgo(observable.nombre, observable.valor)
         
         if tr:
-            print ("Hallazgo: ", observable.nombre, observable.valor)
+            print ("Hallazgo:", observable.nombre, observable.valor)
             print ("=========================")
         
         return hallazgo
@@ -216,11 +208,12 @@ class Obtener(Inferencia):
 class Verificar(Inferencia):
     
     #Verifica si una hipotesis de averia es compatible con un conjuto de hallazgos
-    def __init__(self, lhallazgos, hipotesis):
+    def __init__(self, lHallazgos, hipotesis, fallos):
         
         super().__init__()
-        self.hallazgos = lhallazgos
+        self.hallazgos = lHallazgos
         self.hipotesis = hipotesis
+        self.fallos = fallos
         self.resultado = None
         self.explicacion = ''
         
@@ -230,64 +223,86 @@ class Verificar(Inferencia):
         
         if tr:
             print ("Verificando la hipotesis:", self.hipotesis.nombre)
+            print ("=========================")
+            
+        for f in self.hipotesis.fallos:
+            if tr:
+                print ("Debe presentar:", f.nombre, f.valor)
+                
+            if f.nombre in self.fallos:
+                self.explicacion += u'    (+) Puede ser [' + str(self.hipotesis.nombre)
+                self.explicacion += '] porque presenta el fallo ['
+                self.explicacion += str(f.nombre) + '] con valor ' + str(f.valor) + '.\n'
+            else:
+                self.explicacion += u'    ( - ) No puede ser ['
+                self.explicacion += str(self.hipotesis.nombre)
+                self.explicacion += u'] porque deberia presentar el fallo ['
+                self.explicacion += str(f.nombre) + '] con valor apropiado.\n'
+                resultado = False
+            
+            if resultado == False:
+                self.resultado = False
+                return (False, self.explicacion)
 
         for fh in self.hipotesis.debePresentar:
             if tr:
-                #print ("Debe presentar:", fh, fh.nombre, fh.valor, "=>", self.hallazgos)
                 print ("Debe presentar:", fh.nombre, fh.valor, "=>", [(f.nombre, f.valor) for f in self.hallazgos])
-                print
                 
             if not (fh.nombre in [f.nombre for f in self.hallazgos]):
                 pass
             else:
              #El nombre del fallo de la hipótesis está. Comprobamos que los valores de dicho fallo coincidan
-                 falla = False #Bandera
+                falla = False #Bandera
                  
-                 for e in self.hallazgos:
-                     if e.nombre == fh.nombre: #comprueba que coincide en valores
-                         if  isinstance(fh.valor, list): #Si el valor del fallo de la hipótesis es de tipo lista
-                             if not e.valor in fh.valor: #Comprueba que el valor del fallo presentado está en esa lista
-                                 falla = True #El valor del fallo presentado no está en la lista
-                                 break
-                         else: #El valor del fallo de la hipótesis no es de tipo lista
-                             if not e.valor== fh.valor: #Si no coincide los valores falla
-                                 falla = True #El valor del fallo presentado no está en la lista
-                                 break
+                for e in self.hallazgos:
+                    if e.nombre == fh.nombre: #comprueba que coincide en valores
+                        if isinstance(fh.valor, list): #Si el valor del fallo de la hipótesis es de tipo lista
+                            if not e.valor in fh.valor: #Comprueba que el valor del fallo presentado está en esa lista
+                                falla = True #El valor del fallo presentado no está en la lista
+                                break
+                        else: #El valor del fallo de la hipótesis no es de tipo lista
+                            if not e.valor == fh.valor: #Si no coincide los valores falla
+                                falla = True #El valor del fallo presentado no está en la lista
+                                break
                         
-                 if falla: #Si falla quiere decir que el valor no coincide
-                     self.explicacion += u'    ( - ) No puede ser ['
-                     self.explicacion += str(self.hipotesis.nombre)
-                     self.explicacion += u'] porque deberia presentar el fallo ['
-                     self.explicacion += str(fh.nombre) + '] con valor apropiado.\n'
-                     resultado = False
+                if falla: #Si falla quiere decir que el valor no coincide
+                    self.explicacion += u'    ( - ) No puede ser ['
+                    self.explicacion += str(self.hipotesis.nombre)
+                    self.explicacion += u'] porque deberia presentar el observable ['
+                    self.explicacion += str(fh.nombre) + '] con valor apropiado.\n'
+                    resultado = False             
                      
             if resultado == False: #Si ha resultado fallida la verificación salimos de la verificación.
-                 self.resultado = False
-                 return (False, self.explicacion)
+                self.resultado = False
+                return (False, self.explicacion)
             else:
-                 self.explicacion += u'    (+) Puede ser [' + str(self.hipotesis.nombre)
-                 self.explicacion += '] porque presenta el fallo ['
-                 self.explicacion += str(fh.nombre) + '] con valor ' + str(fh.valor) + '.\n'
+                self.explicacion += u'    (+) Puede ser [' + str(self.hipotesis.nombre)
+                self.explicacion += '] porque presenta el observable ['
+                self.explicacion += str(fh.nombre) + '] con valor ' + str(fh.valor) + '.\n'
                  
         #Eliminar aquellas hipotesis que tenga algun fallo en no debe tener
         for f in self.hipotesis.noPuedePresentar:
-             if (f.nombre, f.valor) in [(e.nombre, e.valor) for e in self.hallazgos]:
-                 self.resultado = False
-                 self.explicacion += u'    ( - ) No puede ser ['
-                 self.explicacion += str(self.hipotesis.nombre)
-                 self.explicacion += u'] porque no puede presentar el fallo ['
-                 self.explicacion += f.nombre + '] con valor '
-                 
-                 if isinstance(f.valor, bool):
-                     self.explicacion += str(f.valor) + '\n'
-                 elif isinstance(f.valor, str):
-                     self.explicacion += f.valor + '\n'
-                               
-                 resultado = False
-                 
-        if resultado == False:
-            self.resultado = False
-            return (False, self.explicacion)
+            for e in self.hallazgos:
+                #if (f.nombre, f.valor) in [(e.nombre, e.valor) for e in self.hallazgos]:
+                if e.nombre == f.nombre:
+                    if e.valor in f.valor: 
+                        self.resultado = False
+                        self.explicacion += u'    ( - ) No puede ser ['
+                        self.explicacion += str(self.hipotesis.nombre)
+                        self.explicacion += u'] porque no puede presentar el observable ['
+                        self.explicacion += f.nombre + '] con valor '
+                        self.explicacion += str(f.valor) + '\n'
+                        resultado = False
+                    else:
+                        self.explicacion += u'    ( + ) Puede ser ['
+                        self.explicacion += str(self.hipotesis.nombre)
+                        self.explicacion += u'] porque no presenta el observable ['
+                        self.explicacion += f.nombre + '] con valor '
+                        self.explicacion += str(f.valor) + '\n'
+                     
+                if resultado == False:
+                    self.resultado = False
+                    return (False, self.explicacion)
 
         self.resultado = True
         return (True, self.explicacion)

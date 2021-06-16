@@ -88,7 +88,7 @@ class Estornudos(Observable):
     
     def __init__(self, valor = None):
         
-        nombre = 'Estornuda a menudo '
+        nombre = 'Estornuda a menudo'
         tipo = 'boleano'
         valoresPermitidos = None
         super().__init__(nombre, tipo, valoresPermitidos, valor)
