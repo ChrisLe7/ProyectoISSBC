@@ -160,7 +160,7 @@ class ClasificacionDlg(QMainWindow):
         self.setCentralWidget(widgetCentral) #Asignar a la ventana la distribucion de los controles
         
         self.setWindowTitle(u'Aplicación para el Diagnostico - Ángel Fuentes y Christian Luna')
-        self.resize(1300, 750)
+        self.setFixedSize(1300, 750)
         self.setWindowIcon(QIcon('imagenes/Logo_UCO.png'))
         self.center()
         self.show()
