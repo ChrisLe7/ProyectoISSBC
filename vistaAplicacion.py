@@ -46,10 +46,10 @@ class ClasificacionDlg(QMainWindow):
         
         #Listado de las posibles hipotesis que se puedan dar
 
-        labelHipotesisL=QLabel("Posibles Hipotesis a buscar",self)#Creamos un listwidget para las posibles hipotesis
+        labelHipotesisL=QLabel("Posibles Hipotesis",self)#Creamos un listwidget para las posibles hipotesis
         labelHipotesisR=QLabel("",self)
         self.listWidgetHipotesis = QListWidget()#Lista de hipotesis
-        self.rellenarPosiblesHipotesis()
+        #self.rellenarPosiblesHipotesis()
         
         #ListWidget para el diagnostico
         labelDiagnosticoL=QLabel("Diagnostico Encontrado",self)
@@ -162,7 +162,7 @@ class ClasificacionDlg(QMainWindow):
         opcionesDiagnostico.addAction(reiniciarDatos)
         opcionesDiagnostico.addAction(exitAct)
         
-        self.setCentralWidget(widgetCentral)  #Asignar a la ventana la distribucion de los controles
+        self.setCentralWidget(widgetCentral) #Asignar a la ventana la distribucion de los controles
         
         self.setWindowTitle(u'Aplicación para el Diagnostico - Ángel Fuentes y Christian Luna')
         self.resize(1300, 750)
@@ -230,9 +230,14 @@ class ClasificacionDlg(QMainWindow):
         self.rellenarFallos()
         self.PlainTextEditExplicacion.setPlainText("Se ha reiniciado el Sistema")
         self.listWidgetDiagnosticos.clear()
+        self.listWidgetHipotesis.clear()
         
     def diagnosticar(self):
         print ('Realizar Diagnostico')
+        
+        self.PlainTextEditExplicacion.setPlainText("")
+        self.listWidgetDiagnosticos.clear()
+        self.listWidgetHipotesis.clear()
         
         fallos = []
         
@@ -249,13 +254,17 @@ class ClasificacionDlg(QMainWindow):
             item2=self.tablaObservables.cellWidget(i, 1)
             observables.append((item1.text() , item2.currentText()))
         
-        explicacion,diagnosticoDetectado = ctrl.eventoDiagnosticar(fallos, observables)
+        explicacion, diferencial, diagnosticoDetectado = ctrl.eventoDiagnosticar(fallos, observables)
         
         """TEMPORAL"""
         self.PlainTextEditExplicacion.setPlainText(explicacion)
         print(diagnosticoDetectado)
-        for i in range(len(diagnosticoDetectado)):
-            self.listWidgetDiagnosticos.addItem(diagnosticoDetectado[i])       
+        
+        for h in diferencial:
+            self.listWidgetHipotesis.addItem(h.nombre)
+                
+        for d in diagnosticoDetectado:
+             self.listWidgetDiagnosticos.addItem(d)
 
 def main():
     app = QApplication(sys.argv)

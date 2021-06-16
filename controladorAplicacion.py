@@ -14,7 +14,7 @@ import modelos.bcEnfermedades as bc
 def eventoDiagnosticar(fallos, observables):
     
     metodo = modelo.MetodoCoberturaCausal(fallos, observables)
-    return metodo.execute(True)
+    return metodo.execute()
     
 def getObservables():
     

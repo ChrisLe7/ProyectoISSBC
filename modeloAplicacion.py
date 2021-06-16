@@ -48,7 +48,7 @@ class MetodoCoberturaCausal():
         self.diagnosticoEncontrado = []
         #Se obtiene el conjunto diferencial invocando a la inferencia de cobertura causal
         cc = Cubrir(self.fallos)
-        self.diferencial = cc.execute(True) #Devuelve una lista con las posibles hipotesis
+        self.diferencial = cc.execute() #Devuelve una lista con las posibles hipotesis
         
         self.explicacion+=u'\nSe obtiene el conjunto diferencial: \n'
         
@@ -64,7 +64,7 @@ class MetodoCoberturaCausal():
                 self.diagnostico.append(i) #Se añade a diagnostico las posibles hipótesis, es decir el conjunto diferencial
             
             while len(self.diagnostico) > 0 and len(self.observables) > 0:
-                hipotesisSeleccionada = Seleccionar(self.diagnostico).execute(True) #Seleccionamos una de las posibles hipotesis
+                hipotesisSeleccionada = Seleccionar(self.diagnostico).execute() #Seleccionamos una de las posibles hipotesis
             
                 if tr: #Este if solo salta si estamos ejecutando para la terminal
                     #print (len(self.diagnostico))
@@ -80,39 +80,44 @@ class MetodoCoberturaCausal():
                     #print ("======================")
             
                 #Ahora vamos a especificar un observable
-                observable = Especificar().execute(self.observables, self.observablesVistos, True) #Especificamos para obtener el observable
+                observable = Especificar().execute(self.observables, self.observablesVistos) #Especificamos para obtener el observable
             
                 #Ahora vamos a obtener un hallazgo de ese observable
-                hallazgo = Obtener().execute(observable, True)
+                hallazgo = Obtener().execute(observable)
+                
                 if hallazgo not in self.evidencias:
                     self.evidencias.append(hallazgo) #añadimos el hallazgo a la lista de evidencias.
                 
                 #Ahora vamos a realizar la verificacion
                 for i in self.diferencial:
                     if i in self.diagnostico:
-                        self.explicacion += u'\n Probamos la  hipotesis de '
-                        self.explicacion += str(i.nombre) + '\n'
+                        self.explicacion += u'\n Probamos la  hipotesis de ' + str(i.nombre) + " con el observable " + str(observable.nombre) + '\n'
                         
-                        verifica = Verificar(self.evidencias, i).execute(True) #aqui el verificar recibe la lista de evidencias u hallazgos y la posible hipótesis de solución
+                        verifica = Verificar(self.evidencias, i).execute() #aqui el verificar recibe la lista de evidencias u hallazgos y la posible hipótesis de solución
             
                         if verifica[0] is False: #Si la hipotesis no es posible se elimina del conjunto diferencial
                             if tr:
                                 print ("Verificacion completada. No puede ser, por lo tanto se borra la hipotesis\n")
-                                self.explicacion += verifica[1]
-                                if self.diagnosticoEncontrado.count(i.nombre) != 0:
-                                    self.diagnosticoEncontrado.remove(i.nombre)
-                                if i in self.diagnostico:
-                                    self.diagnostico.remove(i) #vamos eliminando aquellas hipotesis que sean falsas
+                                
+                            self.explicacion += verifica[1]
+                                
+                            if self.diagnosticoEncontrado.count(i.nombre) != 0:
+                                self.diagnosticoEncontrado.remove(i.nombre)
+                            if i in self.diagnostico:
+                                self.diagnostico.remove(i) #vamos eliminando aquellas hipotesis que sean falsas
                         #si verificar es falso para esa hipotesis, esta será eliminada del conjunto diagnostico que contendrá la solucion final(averia) o soluciones
                         else:
                             if tr:
                                 print ("Verificacion completada. Si puede ser, por lo tanto se mantiene la hipotesis\n")
+                            
                             if self.diagnosticoEncontrado.count(i.nombre) == 0:
                                 self.diagnosticoEncontrado.append(i.nombre)
+                                
                             self.explicacion += verifica[1]
                             
                 self.observables.pop(0)
-            return self.explicacion,self.diagnosticoEncontrado
+                
+            return self.explicacion, self.diferencial, self.diagnosticoEncontrado
             
 class Inferencia():
     
@@ -143,13 +148,10 @@ class Cubrir(Inferencia):
                     if i.nombre == f:
                         if not h in self.listaHipotesis:
                             self.listaHipotesis.append(h)
-        
+                
         if tr:
             print ("Hipotesis posibles:")
-            
-            for h in self.listaHipotesis:
-                print (h.nombre)
-
+            print (h.nombre for h in self.listaHipotesis)
             print ("=========================")
         
         hipotesis = self.listaHipotesis
@@ -222,17 +224,16 @@ class Verificar(Inferencia):
         self.resultado = None
         self.explicacion = ''
         
-    def execute(self, tr=True):
+    def execute(self, tr = False):
         
         resultado = True
         
         if tr:
-            print ("Verificando la hipotesis:", self.hipotesis.nombre, self.hipotesis)
-            print
+            print ("Verificando la hipotesis:", self.hipotesis.nombre)
 
         for fh in self.hipotesis.debePresentar:
             if tr:
-                print ("Debe presentar:", fh, fh.nombre, fh.valor, "=>", self.hallazgos)
+                #print ("Debe presentar:", fh, fh.nombre, fh.valor, "=>", self.hallazgos)
                 print ("Debe presentar:", fh.nombre, fh.valor, "=>", [(f.nombre, f.valor) for f in self.hallazgos])
                 print
                 
