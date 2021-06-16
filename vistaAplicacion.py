@@ -21,20 +21,25 @@ class ClasificacionDlg(QMainWindow):
         self.initUI()
         
     def initUI(self):
-                
+        self.colorEstablecidoBox = "background-color: rgb(218, 232, 236);"
+        #117, 220, 75 : 188, 240, 166 
+        
+        self.colorFondo = "background-color: rgb(188, 240, 166);"
+        self.estiloLabel = "font: bold italic 10pt; "
         widgetCentral = QWidget()
         
         cabeceraObservables = ['Observable', 'Valores Posibles']
         cabeceraFallos = ['Fallo']
         #Para el tema de mostrar los fallos y observables utilizaremos el QTableWidget
        
-        labelFallosA = QLabel ("Seleccione los fallos existentes")
+        self.labelFallosA = QLabel ("Seleccione los fallos existentes")
+        
         self.tablaFallos = QTableWidget(len(ctrl.getFallos()), 1)
         self.tablaFallos.setColumnWidth(0, 250) #Asignan ancho a las columnas
         self.tablaFallos.setHorizontalHeaderLabels(cabeceraFallos) #Asignamos de esta forma la cabecera de la tabla
         self.rellenarFallos()
         
-        labelObservablesA = QLabel("Seleccione los valores para observables", self)
+        self.labelObservablesA = QLabel("Seleccione los valores para observables", self)
         
         self.tablaObservables = QTableWidget(len(ctrl.getObservables()), 2) #Crea la tabla de elementos observables de dos columnas
         self.tablaObservables.setColumnWidth(0, 350) #Asignan ancho a las columnas
@@ -44,18 +49,18 @@ class ClasificacionDlg(QMainWindow):
         
         #Listado de las posibles hipotesis que se puedan dar
 
-        labelHipotesisL=QLabel("Posibles Hipotesis",self)#Creamos un listwidget para las posibles hipotesis
+        self.labelHipotesisL=QLabel("Posibles Hipotesis",self)#Creamos un listwidget para las posibles hipotesis
         self.listWidgetHipotesis = QListWidget()#Lista de hipotesis
         #self.rellenarPosiblesHipotesis()
         
         #ListWidget para el diagnostico
-        labelDiagnosticoL=QLabel("Diagnostico Encontrado",self)
+        self.labelDiagnosticoL=QLabel("Diagnostico Encontrado",self)
         self.listWidgetDiagnosticos = QListWidget()#Lista de diagnosticos
         
         
         #Texto de explicación del diagnostico
           
-        labelExplicacionL=QLabel("Explicacion",self)
+        self.labelExplicacionL=QLabel("Explicacion",self)
         self.PlainTextEditExplicacion = QPlainTextEdit("Todavía no se ha realizado al diagnostico")#Cuadro de texto de la explicacion 
           
         #Botones
@@ -70,25 +75,24 @@ class ClasificacionDlg(QMainWindow):
         #Ahora agruparemos los widgets en sus respectivos layouts
        
         layoutFallos = QVBoxLayout()
-        layoutFallos.addWidget(labelFallosA)
+        layoutFallos.addWidget(self.labelFallosA)
         layoutFallos.addWidget(self.tablaFallos)
         
-        
         layoutObservables = QVBoxLayout()
-        layoutObservables.addWidget(labelObservablesA)
+        layoutObservables.addWidget(self.labelObservablesA)
         layoutObservables.addWidget(self.tablaObservables)
-        
+
         layoutHipotesis = QVBoxLayout()
-        layoutHipotesis.addWidget(labelHipotesisL)
+        layoutHipotesis.addWidget(self.labelHipotesisL)
         layoutHipotesis.addWidget(self.listWidgetHipotesis)
-        
+
         layoutDiagnosticos = QVBoxLayout()
-        layoutDiagnosticos.addWidget(labelDiagnosticoL)
+        layoutDiagnosticos.addWidget(self.labelDiagnosticoL)
         layoutDiagnosticos.addWidget(self.listWidgetDiagnosticos)
- 
+
         layoutExplicacion = QVBoxLayout()
-        layoutExplicacion.addWidget(labelExplicacionL)
-        layoutExplicacion.addWidget(self.PlainTextEditExplicacion)       
+        layoutExplicacion.addWidget(self.labelExplicacionL)
+        layoutExplicacion.addWidget(self.PlainTextEditExplicacion)     
 
         #Layout Superior
         
@@ -105,7 +109,7 @@ class ClasificacionDlg(QMainWindow):
         #Layout Inferior
         layoutSeccionInferior = QGridLayout() 
         layoutSeccionInferior.addLayout(layoutDiagnosticos,0,0)
-
+        
         layoutSeccionInferior.addLayout(layoutExplicacion,0,1)
 
  
@@ -156,14 +160,42 @@ class ClasificacionDlg(QMainWindow):
         opcionesDiagnostico.addAction(diagnosticar)
         opcionesDiagnostico.addAction(reiniciarDatos)
         opcionesDiagnostico.addAction(exitAct)
-        
+        menubar.setStyleSheet(self.colorEstablecidoBox)
         self.setCentralWidget(widgetCentral) #Asignar a la ventana la distribucion de los controles
         
         self.setWindowTitle(u'Aplicación para el Diagnostico - Ángel Fuentes y Christian Luna')
-        self.setFixedSize(1300, 750)
+        self.setFixedSize(1318, 750)
         self.setWindowIcon(QIcon('imagenes/Logo_UCO.png'))
+       
+        stlButton = """QPushButton {
+        background-color: palegoldenrod;
+        border-width: 2px;
+        border-color: darkkhaki;
+        border-style: solid;
+        border-radius: 5;
+        padding: 3px;
+        min-width: 9ex;
+        min-height: 2.5ex;
+        }"""
+        QApplication.instance().setStyleSheet(stlButton)
+        
+        self.establecerColores()
         self.center()
         self.show()
+
+    def establecerColores(self):
+        self.tablaFallos.setStyleSheet(self.colorEstablecidoBox)
+        self.tablaObservables.setStyleSheet(self.colorEstablecidoBox )
+        self.listWidgetHipotesis.setStyleSheet(self.colorEstablecidoBox )
+        self.listWidgetDiagnosticos.setStyleSheet(self.colorEstablecidoBox )
+        self.PlainTextEditExplicacion.setStyleSheet(self.colorEstablecidoBox )
+        self.setStyleSheet(self.colorFondo)
+        
+        self.labelFallosA.setStyleSheet(self.estiloLabel)
+        self.labelObservablesA.setStyleSheet(self.estiloLabel)
+        self.labelHipotesisL.setStyleSheet(self.estiloLabel)
+        self.labelDiagnosticoL.setStyleSheet(self.estiloLabel)
+        self.labelExplicacionL.setStyleSheet(self.estiloLabel)
 
     def center(self):
         
