@@ -142,6 +142,9 @@ class ClasificacionDlg(QMainWindow):
         self.center()
         self.show()
 
+    '''
+    Con esta función realizaremos la asignación de los estilos para los diferentes Widgets del sistema
+    '''
     def establecerColores(self):
         
         self.colorFondo = "background-color: #513d47;"
@@ -197,6 +200,9 @@ class ClasificacionDlg(QMainWindow):
         
         self.diagnosticaButton.setStyleSheet(self.colorEstablecidoBoton)
 
+    '''
+    Con esta función centraremos la ventana de la aplicación
+    '''
     def center(self):
         
         qr = self.frameGeometry()
@@ -204,6 +210,9 @@ class ClasificacionDlg(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())    
 
+    '''
+    Mediante esta función rellenaremos las tablas de observables
+    '''
     def rellenarObservables(self):
         
         print("Se rellenan los observables")
@@ -225,7 +234,10 @@ class ClasificacionDlg(QMainWindow):
                 
             self.tablaObservables.setItem(i, 0, item)
             self.tablaObservables.setCellWidget(i, 1, opciones)
-        
+  
+    '''
+    Mediante esta función rellenaremos las tablas de fallos
+    '''    
     def rellenarFallos(self):
         
         print("Se rellenan los fallos")
@@ -239,6 +251,10 @@ class ClasificacionDlg(QMainWindow):
             item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
             self.tablaFallos.setItem(i, 0, item)           
          
+    '''
+    De esta forma podemos obtener los diferentes dominios de forma dinámica, permitiendo sin necesidad de modificar la vista el 
+    agregar un nuevo dominio, unicamente deberá de seguir el formato de los dominios que ya se encuentran en dicha carpeta
+    '''
     def getDominios(self):
 
         print("Detectamos los dominios que se pueden cargar")
@@ -252,15 +268,20 @@ class ClasificacionDlg(QMainWindow):
             act.triggered.connect(self.cambiarDominio)
             self.eleccionDominio.addAction(act)
 
+    '''
+    De esta forma cambiamos el dominio de la aplicación actual, reiniciando los datos de los observables y de los fallos posibles.
+    '''
     def cambiarDominio(self):
                 
         print("Cambiaremos el dominio al de '" + self.sender().text() + "'")
                 
         dominio = "bc" + self.sender().text()
         ctrl.cargarDominio(dominio)
-        self.rellenarObservables()
-        self.rellenarFallos()
-        
+        self.reiniciarDatos()
+   
+    '''
+    Esta función reinicia los datos de las tablas y de las listas visibles en la vista
+    '''   
     def reiniciarDatos(self):
         
         print ('Reiniciar los datos')
@@ -270,7 +291,10 @@ class ClasificacionDlg(QMainWindow):
         self.PlainTextEditExplicacion.setPlainText("Se ha reiniciado el Sistema")
         self.listWidgetDiagnosticos.clear()
         self.listWidgetHipotesis.clear()
-        
+     
+    '''
+    Función que desencadenara la tarea de diagnostico del controlador, encargada de recoger los fallos presentados y los observables dados
+    '''
     def diagnosticar(self):
         
         print ('Realizar Diagnostico\n')
