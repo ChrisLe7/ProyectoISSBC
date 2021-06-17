@@ -159,12 +159,12 @@ class Resfriado(Hipotesis):
         f1=CongestionNasal(True)
         f2=Estornudos(True)
         
-        o1=DolorCabeza(['Moderado'])
+        o1=DolorCabeza(['Leve', 'Moderado'])
         o3=DolorGarganta(['Moderado'])
 
         self.fallos = [f1, f2]
-        self.debePresentar = [f1, f2]
-        self.noPuedePresentar = [o1, o3]
+        self.debePresentar = [o1]
+        self.noPuedePresentar = [o3]
         self.ayuda = u'Esta resfriado'
 
 class Gripe(Hipotesis):

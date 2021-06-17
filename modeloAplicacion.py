@@ -5,8 +5,11 @@ Created on Wed May  5 13:56:33 2021
 @author: Ángel
 """
 
+from importlib import import_module
 from bcGenerica import Hallazgo
-import modelos.bcEnfermedades as cd
+
+# Guarda el módulo de la base de conocimientos cargado
+bc = None
 
 class MetodoCoberturaCausal():
     
@@ -43,6 +46,9 @@ class MetodoCoberturaCausal():
         
     def execute(self, tr = False):
         
+        if bc == None:
+            return 'Primero debe de seleccionar un dominio', [], []
+        
         if self.fallos == []:
             return 'No se han seleccionado fallos', [], []
         
@@ -66,6 +72,8 @@ class MetodoCoberturaCausal():
                 self.diagnostico.append(i) #Se añade a diagnostico las posibles hipótesis, es decir el conjunto diferencial
             
             while len(self.diagnostico) > 0 and len(self.observables) > 0:
+                # AUNQUE ES UNA TAREA QUE SE PUEDE HACER SEGÚN LA PLANTILLA DE TEORÍA
+                # PARA ESTA FORMA DE IMPLEMENTAR EL ALGORITMO NO ES NECESARIA
                 hipotesisSeleccionada = Seleccionar(self.diagnostico).execute() #Seleccionamos una de las posibles hipotesis
             
                 if tr: #Este if solo salta si estamos ejecutando para la terminal
@@ -133,7 +141,7 @@ class Cubrir(Inferencia):
         
     def execute(self, tr = False):
         
-        hipotesis = cd.getHipotesis()
+        hipotesis = bc.getHipotesis()
         
         for h in hipotesis:
             for i in h.fallos:
@@ -179,7 +187,7 @@ class Especificar(Inferencia):
         
     def execute(self, listaObservables, listaObservablesVistos, tr = False):  
         
-        observable = cd.creaObservable(listaObservables[0]) #lObservables es la lista actual de observables con los valores que tienen marcados por el usuario
+        observable = bc.creaObservable(listaObservables[0]) #lObservables es la lista actual de observables con los valores que tienen marcados por el usuario
         listaObservablesVistos.append(listaObservables[0])
         
         if tr:
@@ -207,14 +215,13 @@ class Obtener(Inferencia):
     
 class Verificar(Inferencia):
     
-    #Verifica si una hipotesis de averia es compatible con un conjuto de hallazgos
+    #Verifica si una hipotesis de averia es compatible con un conjuto de hallazgos y fallos
     def __init__(self, lHallazgos, hipotesis, fallos):
         
         super().__init__()
         self.hallazgos = lHallazgos
         self.hipotesis = hipotesis
         self.fallos = fallos
-        self.resultado = None
         self.explicacion = ''
         
     def execute(self, tr = False):
@@ -241,7 +248,6 @@ class Verificar(Inferencia):
                 resultado = False
             
             if resultado == False:
-                self.resultado = False
                 return (False, self.explicacion)
 
         for fh in self.hipotesis.debePresentar:
@@ -273,7 +279,6 @@ class Verificar(Inferencia):
                     resultado = False
                      
             if resultado == False: #Si ha resultado fallida la verificación salimos de la verificación.
-                self.resultado = False
                 return (False, self.explicacion)
             else:
                 self.explicacion += u'    (+) Puede ser [' + str(self.hipotesis.nombre)
@@ -296,7 +301,6 @@ class Verificar(Inferencia):
                             break
                         
             if falla: #Si falla quiere decir que el valor no coincide
-                self.resultado = False
                 self.explicacion += u'    (-) No puede ser ['
                 self.explicacion += str(self.hipotesis.nombre)
                 self.explicacion += u'] porque no puede presentar el observable ['
@@ -311,8 +315,25 @@ class Verificar(Inferencia):
                 self.explicacion += str(f.valor) + '\n'
                 
             if resultado == False:
-                self.resultado = False
                 return (False, self.explicacion)
             
-        self.resultado = True
         return (True, self.explicacion)
+    
+def getObservables():
+    
+    if bc == None:
+        return []
+    
+    return bc.getObservables()
+
+def getFallos():
+    
+    if bc == None:
+        return []
+    
+    return bc.getFallos()
+
+def cargarDominio(dominio):
+    
+    global bc
+    bc = import_module("dominios." + dominio)

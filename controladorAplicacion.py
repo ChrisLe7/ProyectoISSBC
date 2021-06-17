@@ -6,9 +6,6 @@ Created on Wed May  5 13:53:31 2021
 """
 
 import modeloAplicacion as modelo
-
-"""TEMPORAL PARA PRUEBAS"""
-import modelos.bcEnfermedades as bc
     
 """Método utilizado para diagnosticar (llamar al método de cobertura causal)"""    
 def eventoDiagnosticar(fallos, observables):
@@ -16,14 +13,17 @@ def eventoDiagnosticar(fallos, observables):
     metodo = modelo.MetodoCoberturaCausal(fallos, observables)
     return metodo.execute()
     
+"""Método utilizado para obtener los observables de la base de conocimientos activa"""
 def getObservables():
     
-    return bc.getObservables()
+    return modelo.getObservables()
 
+"""Método utilizado para obtener los fallos de la base de conocimientos activa"""
 def getFallos():
     
-    return bc.getFallos()
+    return modelo.getFallos()
 
-def getPosiblesHipotesis():
+"""Método utilizado para cargar un dominio"""
+def cargarDominio(dominio):
     
-    return bc.getHipotesis()
+    modelo.cargarDominio(dominio)
