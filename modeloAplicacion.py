@@ -82,7 +82,7 @@ class MetodoCoberturaCausal():
             
                 #Ahora vamos a especificar un observable
                 observable = Especificar().execute(self.observables, self.observablesVistos) #Especificamos para obtener el observable
-            
+
                 #Ahora vamos a obtener un hallazgo de ese observable
                 hallazgo = Obtener().execute(observable)
                 
@@ -186,10 +186,10 @@ class Especificar(Inferencia):
         super().__init__()        
         
     def execute(self, listaObservables, listaObservablesVistos, tr = False):  
-        
+                
         observable = bc.creaObservable(listaObservables[0]) #lObservables es la lista actual de observables con los valores que tienen marcados por el usuario
         listaObservablesVistos.append(listaObservables[0])
-        
+                
         if tr:
             print ("Observable seleccionado:", observable.nombre)
             print ("=========================")
