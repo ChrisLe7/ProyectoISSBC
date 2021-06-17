@@ -73,15 +73,6 @@ class NoDaVideo(Observable):
         super().__init__(nombre, tipo, valoresPermitidos, valor)
         self.ayuda = '''El ordenador no da vídeo'''
         
-class SeApaga(Observable):
-    
-    def __init__(self, valor = None):
-        
-        nombre = 'Se apaga'
-        tipo = 'boleano'
-        valoresPermitidos = None
-        super().__init__(nombre, tipo, valoresPermitidos, valor)
-        self.ayuda = '''El ordenador se apaga'''
         
 class NoFuncionaTeclado(Observable):
     
@@ -93,15 +84,6 @@ class NoFuncionaTeclado(Observable):
         super().__init__(nombre, tipo, valoresPermitidos, valor)
         self.ayuda = '''El teclado del ordenador no funciona'''
         
-class NoDaAudio(Observable):
-    
-    def __init__(self, valor = None):
-        
-        nombre = 'No da audio'
-        tipo = 'boleano'
-        valoresPermitidos = None
-        super().__init__(nombre, tipo, valoresPermitidos, valor)
-        self.ayuda = '''El ordenador da audio'''
 
 class SeSobrecalienta(Observable):
     
@@ -121,9 +103,7 @@ def getFallos():
     fallos = []
     fallos.append(NoEnciende())
     fallos.append(NoDaVideo())
-    fallos.append(SeApaga())
     fallos.append(NoFuncionaTeclado())
-    fallos.append(NoDaAudio())
     fallos.append(SeSobrecalienta())
 
     return fallos
@@ -172,6 +152,123 @@ class Fallo64KbRAM(Hipotesis):
         self.noPuedePresentar = [o3, o4, o5]
         self.ayuda = u'Fallan los primeros 64Kb RAM'
 
+class FalloProcesador(Hipotesis):
+    
+    def __init__(self):
+        
+        super().__init__(nombre = 'Fallo en el procesador')
+        #Creamos instancias de observables
+        
+        f1 = NoEnciende(True)
+
+        o1 = PitidosCortos(['5'])
+        o2 = PitidosLargos(['0'])
+        
+        o3 = PitidosCortos(['1','2','3', '4', '6', '7', '8', '9', '10', '11', '12'])
+        o4 = PitidosLargos(['1', '2', '3'])
+        o5 = PitidosConstantes(True)
+        
+        self.fallos = [f1]
+        self.debePresentar = [o1, o2]
+        self.noPuedePresentar = [o3, o4, o5]
+        self.ayuda = u'Falla el procesador'
+        
+class FalloSobrecalentamientoProcesador(Hipotesis):
+    def __init__(self):
+        
+        super().__init__(nombre = 'Fallo Sobrecalentamiento en el procesador')
+        #Creamos instancias de observables
+        
+        f1 = NoEnciende(True)
+        f2 = SeSobrecalienta(True)
+
+        o1 = PitidosCortos(['9'])
+        o2 = PitidosLargos(['1'])
+        
+        o3 = PitidosCortos(['1','2','3', '4', '5', '6', '7', '8', '10', '11', '12'])
+        o4 = PitidosLargos(['0', '2', '3'])
+        o5 = PitidosConstantes(True)
+        
+        self.fallos = [f1,f2]
+        self.debePresentar = [o1, o2]
+        self.noPuedePresentar = [o3, o4, o5]
+        self.ayuda = u'Falla el procesador por sobrecalentamiento'
+        
+class FalloTarjetaGráfica (Hipotesis):
+    def __init__(self):
+        
+        super().__init__(nombre = 'Fallo en la tarjeta gráfica')
+        #Creamos instancias de observables
+        
+        f1 = NoEnciende(True)
+        f2 = NoDaVideo(True)
+        o1 = PitidosCortos(['2'])
+        o2 = PitidosLargos(['1'])
+        
+        o3 = PitidosCortos(['1','3', '4', '5', '6', '7', '8', '9', '10', '11', '12'])
+        o4 = PitidosLargos(['0', '2', '3'])
+        o5 = PitidosConstantes(True)
+        
+        self.fallos = [f1,f2]
+        self.debePresentar = [o1, o2]
+        self.noPuedePresentar = [o3, o4, o5]
+        self.ayuda = u'Falla la tarjeta gráfica'
+        
+class NoReconoceTarjetaGráfica (Hipotesis):
+    def __init__(self):
+        
+        super().__init__(nombre = 'No reconoce la tarjeta gráfica')
+        #Creamos instancias de observables
+        
+        f1 = NoEnciende(True)
+        f2 = NoDaVideo(True)
+        o1 = PitidosConstantes(True)
+        
+        o2 = PitidosCortos(['1','2','3', '4', '5', '6', '7', '8', '9', '10', '11', '12'])
+        o3 = PitidosLargos(['1', '2', '3'])
+        
+        self.fallos = [f1,f2]
+        self.debePresentar = [o1]
+        self.noPuedePresentar = [o2, o3]
+        self.ayuda = u'No reconoce la tarjeta gráfica'
+        
+        
+class ErrorTeclado (Hipotesis):
+    def __init__(self):
+        
+        super().__init__(nombre = 'Error en el controlador del teclado ')
+        #Creamos instancias de observables
+        
+        f1 = NoFuncionaTeclado(True)
+        o1 = PitidosCortos(['6'])
+        o2 = PitidosLargos(['0'])
+        
+        o3 = PitidosCortos(['1','2','3', '4', '5', '7', '8', '9', '10', '11', '12'])
+        o4 = PitidosLargos(['1', '2', '3'])
+        o5 = PitidosConstantes(True)
+        self.fallos = [f1]
+        self.debePresentar = [o1,o2]
+        self.noPuedePresentar = [o3, o4,o5]
+        self.ayuda = u'Error en el controlador del teclado '
+
+class NoReconoceTeclado (Hipotesis):
+    def __init__(self):
+        
+        super().__init__(nombre = 'No reconoce el teclado')
+        #Creamos instancias de observables
+        
+        f1 = NoFuncionaTeclado(True)
+        o1 = PitidosLargos(['3'])
+        
+        o2 = PitidosCortos(['1','2','3', '4', '5', '6', '7', '8', '9', '10', '11', '12'])
+        o3 = PitidosLargos(['0', '1', '2'])
+        o4 = PitidosConstantes(True)
+        self.fallos = [f1]
+        self.debePresentar = [o1]
+        self.noPuedePresentar = [o2, o3, o4]
+        self.ayuda = u'No reconoce el teclado'
+        
+        
 def getHipotesis():
     
     '''
@@ -180,6 +277,14 @@ def getHipotesis():
     hipotesis = []
     hipotesis.append(FalloRAM())
     hipotesis.append(Fallo64KbRAM())
+    hipotesis.append(FalloProcesador())
+    hipotesis.append(FalloSobrecalentamientoProcesador())
+    hipotesis.append(FalloTarjetaGráfica())
+    hipotesis.append(NoReconoceTarjetaGráfica())
+    hipotesis.append(ErrorTeclado())
+    hipotesis.append(NoReconoceTeclado())
+    
+    
     
     return hipotesis
 
