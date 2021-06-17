@@ -46,6 +46,7 @@ def getObservables():
     Devuelve la lista de observables de la BC
     '''
     obs = []
+    
     obs.append(PitidosLargos())
     obs.append(PitidosCortos())
     obs.append(PitidosConstantes())
@@ -101,6 +102,7 @@ def getFallos():
     Devuelve la lista de fallos de la BC
     '''
     fallos = []
+    
     fallos.append(NoEnciende())
     fallos.append(NoDaVideo())
     fallos.append(NoFuncionaTeclado())
@@ -174,6 +176,7 @@ class FalloProcesador(Hipotesis):
         self.ayuda = u'Falla el procesador'
         
 class FalloSobrecalentamientoProcesador(Hipotesis):
+    
     def __init__(self):
         
         super().__init__(nombre = 'Fallo Sobrecalentamiento en el procesador')
@@ -194,7 +197,8 @@ class FalloSobrecalentamientoProcesador(Hipotesis):
         self.noPuedePresentar = [o3, o4, o5]
         self.ayuda = u'Falla el procesador por sobrecalentamiento'
         
-class FalloTarjetaGráfica (Hipotesis):
+class FalloTarjetaGráfica(Hipotesis):
+    
     def __init__(self):
         
         super().__init__(nombre = 'Fallo en la tarjeta gráfica')
@@ -214,7 +218,8 @@ class FalloTarjetaGráfica (Hipotesis):
         self.noPuedePresentar = [o3, o4, o5]
         self.ayuda = u'Falla la tarjeta gráfica'
         
-class NoReconoceTarjetaGráfica (Hipotesis):
+class NoReconoceTarjetaGráfica(Hipotesis):
+    
     def __init__(self):
         
         super().__init__(nombre = 'No reconoce la tarjeta gráfica')
@@ -233,7 +238,8 @@ class NoReconoceTarjetaGráfica (Hipotesis):
         self.ayuda = u'No reconoce la tarjeta gráfica'
         
         
-class ErrorTeclado (Hipotesis):
+class ErrorTeclado(Hipotesis):
+    
     def __init__(self):
         
         super().__init__(nombre = 'Error en el controlador del teclado ')
@@ -246,12 +252,14 @@ class ErrorTeclado (Hipotesis):
         o3 = PitidosCortos(['1','2','3', '4', '5', '7', '8', '9', '10', '11', '12'])
         o4 = PitidosLargos(['1', '2', '3'])
         o5 = PitidosConstantes(True)
+        
         self.fallos = [f1]
         self.debePresentar = [o1,o2]
         self.noPuedePresentar = [o3, o4,o5]
         self.ayuda = u'Error en el controlador del teclado '
 
-class NoReconoceTeclado (Hipotesis):
+class NoReconoceTeclado(Hipotesis):
+    
     def __init__(self):
         
         super().__init__(nombre = 'No reconoce el teclado')
@@ -263,11 +271,11 @@ class NoReconoceTeclado (Hipotesis):
         o2 = PitidosCortos(['1','2','3', '4', '5', '6', '7', '8', '9', '10', '11', '12'])
         o3 = PitidosLargos(['0', '1', '2'])
         o4 = PitidosConstantes(True)
+        
         self.fallos = [f1]
         self.debePresentar = [o1]
         self.noPuedePresentar = [o2, o3, o4]
-        self.ayuda = u'No reconoce el teclado'
-        
+        self.ayuda = u'No reconoce el teclado'    
         
 def getHipotesis():
     
@@ -275,6 +283,7 @@ def getHipotesis():
     Devuelve la lista de hipotesis de la BC
     '''
     hipotesis = []
+    
     hipotesis.append(FalloRAM())
     hipotesis.append(Fallo64KbRAM())
     hipotesis.append(FalloProcesador())
@@ -284,19 +293,20 @@ def getHipotesis():
     hipotesis.append(ErrorTeclado())
     hipotesis.append(NoReconoceTeclado())
     
-    
-    
     return hipotesis
 
 def creaObservable(tp):
     
-    '''Crea una instancia de un observable si la tupla coincide con la base de conocimiento. 
+    '''
+    Crea una instancia de un observable si la tupla coincide con la base de conocimiento. 
     Si el observable es correcto devuelve una instancia del observable. Iremos comprobando los observables
     de la lista de observables con sus valores actualizados, y cuando coincida el observable con su
-    correspondiente se creará ese observable'''
+    correspondiente se creará ese observable
+    '''
         
     if tp[0] == 'Pitidos Cortos':
         ob = PitidosCortos(tp[1])
+        
         if tp[1] in ob.valoresPermitidos:
             ob.valor = tp[1]
             return ob
@@ -305,6 +315,7 @@ def creaObservable(tp):
     
     elif tp[0] == 'Pitidos Largos':
         ob = PitidosLargos(tp[1])
+        
         if tp[1] in ob.valoresPermitidos:
             ob.valor = tp[1]
             return ob
@@ -313,6 +324,7 @@ def creaObservable(tp):
 
     elif tp[0] == 'Pitidos Constantes':
         ob = PitidosConstantes(tp[1])
+        
         if tp[1] == 'True':
             ob.valor = True
         else:

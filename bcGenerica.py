@@ -7,7 +7,9 @@ Created on Wed May  5 12:36:20 2021
 
 class Observable():
     
-    """Definicion generica de una observable"""
+    '''
+    Definicion generica de una observable
+    '''
     def __init__(self, nombre = None, tipo = None, valoresPermitidos = None, valor = None):
         
         self.nombre = nombre
@@ -17,7 +19,9 @@ class Observable():
 
 class Hallazgo():
     
-    """Definicion generica de un hallazgo"""
+    '''
+    Definicion generica de un hallazgo
+    '''
     def __init__(self, nombre = None, valor = None):
         
         self.nombre = nombre
@@ -33,7 +37,9 @@ class Hallazgo():
     
 class Hipotesis():
     
-    """Definicion generica de una hipotesis"""
+    '''
+    Definicion generica de una hipotesis
+    '''
     def __init__(self, nombre):
         
         self.nombre = nombre
