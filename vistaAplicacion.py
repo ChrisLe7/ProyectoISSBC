@@ -2,7 +2,7 @@
 """
 Created on Sun May  2 19:53:04 2021
 
-@author: Ángel
+@author: Ángel Fuentes (i82fuala) Christian Luna (i82luesc)
 """
 
 import sys

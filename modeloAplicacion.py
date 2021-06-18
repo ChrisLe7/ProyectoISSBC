@@ -2,7 +2,7 @@
 """
 Created on Wed May  5 13:56:33 2021
 
-@author: Ángel
+@author: Ángel Fuentes (i82fuala) Christian Luna (i82luesc)
 """
 
 from importlib import import_module

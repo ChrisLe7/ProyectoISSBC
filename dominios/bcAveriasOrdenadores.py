@@ -2,7 +2,7 @@
 """
 Created on Thu Jun 17 16:23:37 2021
 
-@author: ChrisLe
+@author: Ángel Fuentes (i82fuala) Christian Luna (i82luesc)
 """
 
 from bcGenerica import Observable, Hipotesis

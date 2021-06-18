@@ -2,7 +2,7 @@
 """
 Created on Wed May  5 12:36:20 2021
 
-@author: Ángel
+@author: Ángel Fuentes (i82fuala) Christian Luna (i82luesc)
 """
 
 class Observable():
